@@ -26,6 +26,12 @@
 import { faker } from '@faker-js/faker';
 const url = Cypress.env('baseUrl')
 
+
+const bodyUser = {
+    "username": faker.person.firstName(),
+    "password": faker.internet.password(),
+}
+
 //body automático
 const bodyCar  = {
     "model": {
@@ -155,9 +161,25 @@ Cypress.Commands.add('createCar', () => {
     }).then((response) => {
         expect(response.status).to.eq(200)
         cy.log(response.body)
+        cy.wrap(response.body.id).as('createdCarId');
+    })
+})
+
+Cypress.Commands.add('createUser', () => {
+    cy.request({
+        method: 'POST',
+        url: url + 'carShop/cars',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: bodyUser
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        cy.log(response.body)
         cy.wrap(response.body.id).as('createdUserId');
     })
 })
+
 
 //TESTES NEGATIVOS
 Cypress.Commands.add('bodyEmpty',() => {

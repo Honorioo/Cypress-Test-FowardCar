@@ -1,14 +1,14 @@
 import { Given, When, Then } from "cypress-cucumber-preprocessor/steps";
 
 
-Given('que o usuário precise cadastrar pelo menos um carro', () => {
+Given('que o usuário precise cadastrar pelo menos uma pessoa', () => {
     return true;
 })
 
 When('o usuário envia uma requisicao POST para o endpoint', () => {
-    cy.createCar();
+    cy.createUser();
 })
 
-Then('o usuário recebera o código 200 OK, carro cadastrado', () => {
+Then('o usuário recebera o código 200 OK, usuário cadastrado', () => {
     return true;
 })
