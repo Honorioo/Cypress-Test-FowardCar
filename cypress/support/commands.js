@@ -61,6 +61,40 @@ const bodyCar  = {
     "image2": "wefew"
 }
 
+//body automático vazio
+const bodyCarEmpty = {
+    "model": {
+        "class": "com.ca.lisa.demo.CarModel",
+        "id": "",
+        "fuelType": "",
+        "make": {
+            "class": "",
+            "id": "",
+            "name": "",
+        },
+        "modelYear": "",
+        "name": "",
+        "subName": "",
+        "type": {
+            "class": "",
+            "id": "",
+            "name": ""
+        }
+    },
+    "stockNumber": "",
+    "price": "",
+    "milage": "",
+    "owners": "",
+    "modelYear":  "",
+    "color": "",
+    "carTrim": "",
+    "engine": "",
+    "transmission": "",
+    "vin": "",
+    "options": "",
+    "image1": "",
+    "image2": ""
+}
 
 Cypress.Commands.add('searchCar', () => {
     cy.request({
@@ -90,13 +124,20 @@ Cypress.Commands.add('createCar', () => {
     })
 })
 
-Cypress.Commands.add('deleteCar', (id) => {
+//TESTES NEGATIVOS
+Cypress.Commands.add('bodyEmpty',() => {
+    cy.log(bodyCarEmpty)
+})
+
+Cypress.Commands.add('postNegativeCar', () => {
     cy.request({
-        method: 'DELETE',
-        url: url + 'carShop/cars/' + id,
+        method: 'POST',
+        url: url + 'carShop/cars',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        body: bodyCarEmpty,
+        failOnStatusCode: false
     }).then((response) => {
         expect(response.status).to.eq(200)
         cy.log(response.body)
