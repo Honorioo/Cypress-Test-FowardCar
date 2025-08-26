@@ -96,6 +96,41 @@ const bodyCarEmpty = {
     "image2": ""
 }
 
+//body automático com erro
+const bodyCarErro  = {
+    "model": {
+        "class": "com.ca.lisa.demo.CarModel",
+        "id": faker.string.uuid(),
+        "fuelType": faker.helpers.arrayElement(['Chevrolet', 'Ford', 'Honda']),//Dados errados
+        "make": {
+            "class": "com.ca.lisa.demo.CarMake",
+            "id": faker.string.uuid(),
+            "name": faker.helpers.arrayElement(['Gas', 'Etanol', 'Diesel']), //Dados errados
+        },
+        "modelYear": faker.person.firstName(),  //Dados errados
+        "name": "TL-AWD",
+        "subName": "SH-AWD",
+        "type": {
+            "class": "com.ca.lisa.demo.CarType",
+            "id": faker.string.uuid(),
+            "name": faker.helpers.arrayElement(['Sedan', 'Hatch', 'SUV'])
+        }
+    },
+    "stockNumber": faker.string.uuid(),
+    "price": "312123",
+    "milage": "55",
+    "owners": "rrfgrge",
+    "modelYear":  faker.date.past().getFullYear(),
+    "color": faker.color.rgb(),
+    "carTrim": "afsfew",
+    "engine": "rfrffe",
+    "transmission": "grrf",
+    "vin": "fe",
+    "options": "ewwe",
+    "image1": "dewdwef",
+    "image2": "wefew"
+}
+
 Cypress.Commands.add('searchCar', () => {
     cy.request({
         method: 'GET',
@@ -129,7 +164,7 @@ Cypress.Commands.add('bodyEmpty',() => {
     cy.log(bodyCarEmpty)
 })
 
-Cypress.Commands.add('postNegativeCar', () => {
+Cypress.Commands.add('postNegativeEmptyCar', () => {
     cy.request({
         method: 'POST',
         url: url + 'carShop/cars',
@@ -137,6 +172,25 @@ Cypress.Commands.add('postNegativeCar', () => {
             'Content-Type': 'application/json'
         },
         body: bodyCarEmpty,
+        failOnStatusCode: false
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        cy.log(response.body)
+    })
+})
+
+Cypress.Commands.add('bodyCarErro',() => {
+    cy.log(bodyCarErro)
+})
+
+Cypress.Commands.add('postNegativeEmptyCar', () => {
+    cy.request({
+        method: 'POST',
+        url: url + 'carShop/cars',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: bodyCarErro,
         failOnStatusCode: false
     }).then((response) => {
         expect(response.status).to.eq(200)
