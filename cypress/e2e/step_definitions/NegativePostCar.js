@@ -42,10 +42,14 @@ And('passo o JSON vazio do carro no body', () => {
     payloadModificado.model.options = '';
     payloadModificado.model.image1 = '';
     payloadModificado.model.image2 = '';
+
+    cy.log('Payload enviado:', JSON.stringify(payloadModificadoErro, null, 2));
 });
 
 When('o usuário envia uma requisicao POST negativa para o endpoint', () => {
-    cy.postNegativeEmptyCar(payloadModificado);
+    cy.postNegative('carShop/cars', payloadModificado).then(() => {
+        cy.log('Response:', JSON.stringify(payloadModificadoErro, null, 2));
+    });;
 });
 
 Then('o usuário recebera o código 400, usuário não pode ser cadastrado', () => {
@@ -68,7 +72,10 @@ And('passo o JSON com dados errados do carro no body', () => {
 });
 
 When('o usuário envia uma requisicao POST negativa com dados errados para o endpoint', () => {
-    cy.postNegativeEmptyCar(payloadModificadoErro);
+    cy.postNegative('carShop/cars', payloadModificadoErro).then(() => {
+        cy.log('Payload enviado:', JSON.stringify(payloadModificadoErro, null, 2));
+        cy.log('Response:', JSON.stringify(payloadModificadoErro, null, 2));
+    });
 });
 
 Then('o usuário recebera o código 400 de erro, carro não pode ser cadastrado', () => {

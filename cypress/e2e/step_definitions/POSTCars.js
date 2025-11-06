@@ -15,7 +15,6 @@ Given('que o usuário precise cadastrar pelo menos um carro', () => {
 
 When('o usuário envia uma requisicao POST para o endpoint', () => {
     const payloadModificado = {...payload}
-    // fixture tem model como objeto, não array
     payloadModificado.model.fuelType = faker.helpers.arrayElement(['Gas', 'Etanol', 'Diesel']);
     payloadModificado.model.make.id = faker.string.uuid();
     payloadModificado.model.make.name = faker.helpers.arrayElement(['Chevrolet', 'Ford', 'Honda']);
@@ -27,10 +26,9 @@ When('o usuário envia uma requisicao POST para o endpoint', () => {
     payloadModificado.milage =  '100000'
     payloadModificado.color = faker.color.rgb();
         
-    cy.createCar(payloadModificado).then((response) => {
+    cy.postBody('carShop/cars', payloadModificado).then(() => {
         cy.log('Payload enviado:', JSON.stringify(payloadModificado, null, 2));
         cy.log('Response:', JSON.stringify(payloadModificado, null, 2));
-        //expect(response.status).to.eq(200)
     });
 })
 

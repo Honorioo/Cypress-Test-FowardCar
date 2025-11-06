@@ -23,12 +23,12 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-const url = Cypress.env('baseUrl')
+const baseUrl = Cypress.env('baseUrl')
 
-Cypress.Commands.add('searchCar', () => {
+Cypress.Commands.add('getSearch', (url) => {
     cy.request({
         method: 'GET',
-        url: url + 'carShop/cars',
+        url: baseUrl + url/* 'carShop/cars' */,
         headers: {
             'Content-Type': 'application/json'
         }
@@ -38,24 +38,10 @@ Cypress.Commands.add('searchCar', () => {
     })
 })
 
-Cypress.Commands.add('createCar', (body) => {
+Cypress.Commands.add('postBody', (url, body) => {
     cy.request({
         method: 'POST',
-        url: url + 'carShop/cars',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: body
-    }).then((response) => {
-        cy.log(response.body)
-        cy.wrap(response.body.id).as('createdCarId');
-    })
-})
-
-Cypress.Commands.add('createUser', (body) => {
-    cy.request({
-        method: 'POST',
-        url: url + 'carShop/cars',
+        url: baseUrl + url,
         headers: {
             'Content-Type': 'application/json'
         },
@@ -63,16 +49,15 @@ Cypress.Commands.add('createUser', (body) => {
     }).then((response) => {
         expect(response.status).to.eq(200)
         cy.log(response.body)
-        cy.wrap(response.body.id).as('createdUserId');
     })
 })
 
 
 //TESTES NEGATIVOS
-Cypress.Commands.add('postNegativeEmptyCar', (body) => {
+Cypress.Commands.add('postNegative', (url, body) => {
     cy.request({
         method: 'POST',
-        url: url + 'carShop/cars',
+        url: baseUrl + url,
         headers: {
             'Content-Type': 'application/json'
         },
