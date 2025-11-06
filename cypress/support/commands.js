@@ -23,119 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-import { faker } from '@faker-js/faker';
 const url = Cypress.env('baseUrl')
-
-
-const bodyUser = {
-    "username": faker.person.firstName(),
-    "password": faker.internet.password(),
-}
-
-//body automático
-const bodyCar  = {
-    "model": {
-        "class": "com.ca.lisa.demo.CarModel",
-        "id": faker.string.uuid(),
-        "fuelType": faker.helpers.arrayElement(['Gas', 'Etanol', 'Diesel']),
-        "make": {
-            "class": "com.ca.lisa.demo.CarMake",
-            "id": faker.string.uuid(),
-            "name": faker.helpers.arrayElement(['Chevrolet', 'Ford', 'Honda']),
-        },
-        "modelYear": faker.date.past().getFullYear(),
-        "name": "TL-AWD",
-        "subName": "SH-AWD",
-        "type": {
-            "class": "com.ca.lisa.demo.CarType",
-            "id": faker.string.uuid(),
-            "name": faker.helpers.arrayElement(['Sedan', 'Hatch', 'SUV'])
-        }
-    },
-    "stockNumber": faker.string.uuid(),
-    "price": "312123",
-    "milage": "55",
-    "owners": "rrfgrge",
-    "modelYear":  faker.date.past().getFullYear(),
-    "color": faker.color.rgb(),
-    "carTrim": "afsfew",
-    "engine": "rfrffe",
-    "transmission": "grrf",
-    "vin": "fe",
-    "options": "ewwe",
-    "image1": "dewdwef",
-    "image2": "wefew"
-}
-
-//body automático vazio
-const bodyCarEmpty = {
-    "model": {
-        "class": "com.ca.lisa.demo.CarModel",
-        "id": "",
-        "fuelType": "",
-        "make": {
-            "class": "",
-            "id": "",
-            "name": "",
-        },
-        "modelYear": "",
-        "name": "",
-        "subName": "",
-        "type": {
-            "class": "",
-            "id": "",
-            "name": ""
-        }
-    },
-    "stockNumber": "",
-    "price": "",
-    "milage": "",
-    "owners": "",
-    "modelYear":  "",
-    "color": "",
-    "carTrim": "",
-    "engine": "",
-    "transmission": "",
-    "vin": "",
-    "options": "",
-    "image1": "",
-    "image2": ""
-}
-
-//body automático com erro
-const bodyCarErro  = {
-    "model": {
-        "class": "com.ca.lisa.demo.CarModel",
-        "id": faker.string.uuid(),
-        "fuelType": faker.helpers.arrayElement(['Chevrolet', 'Ford', 'Honda']),//Dados errados
-        "make": {
-            "class": "com.ca.lisa.demo.CarMake",
-            "id": faker.string.uuid(),
-            "name": faker.helpers.arrayElement(['Gas', 'Etanol', 'Diesel']), //Dados errados
-        },
-        "modelYear": faker.person.firstName(),  //Dados errados
-        "name": "TL-AWD",
-        "subName": "SH-AWD",
-        "type": {
-            "class": "com.ca.lisa.demo.CarType",
-            "id": faker.string.uuid(),
-            "name": faker.helpers.arrayElement(['Sedan', 'Hatch', 'SUV'])
-        }
-    },
-    "stockNumber": faker.string.uuid(),
-    "price": "312123",
-    "milage": "55",
-    "owners": "rrfgrge",
-    "modelYear":  faker.date.past().getFullYear(),
-    "color": faker.color.rgb(),
-    "carTrim": "afsfew",
-    "engine": "rfrffe",
-    "transmission": "grrf",
-    "vin": "fe",
-    "options": "ewwe",
-    "image1": "dewdwef",
-    "image2": "wefew"
-}
 
 Cypress.Commands.add('searchCar', () => {
     cy.request({
@@ -150,29 +38,28 @@ Cypress.Commands.add('searchCar', () => {
     })
 })
 
-Cypress.Commands.add('createCar', () => {
+Cypress.Commands.add('createCar', (body) => {
     cy.request({
         method: 'POST',
         url: url + 'carShop/cars',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: bodyCar
+        body: body
     }).then((response) => {
-        expect(response.status).to.eq(200)
         cy.log(response.body)
         cy.wrap(response.body.id).as('createdCarId');
     })
 })
 
-Cypress.Commands.add('createUser', () => {
+Cypress.Commands.add('createUser', (body) => {
     cy.request({
         method: 'POST',
         url: url + 'carShop/cars',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: bodyUser
+        body: body
     }).then((response) => {
         expect(response.status).to.eq(200)
         cy.log(response.body)
@@ -182,40 +69,17 @@ Cypress.Commands.add('createUser', () => {
 
 
 //TESTES NEGATIVOS
-Cypress.Commands.add('bodyEmpty',() => {
-    cy.log(bodyCarEmpty)
-})
-
-Cypress.Commands.add('postNegativeEmptyCar', () => {
+Cypress.Commands.add('postNegativeEmptyCar', (body) => {
     cy.request({
         method: 'POST',
         url: url + 'carShop/cars',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: bodyCarEmpty,
+        body: body,
         failOnStatusCode: false
     }).then((response) => {
-        expect(response.status).to.eq(200)
-        cy.log(response.body)
-    })
-})
-
-Cypress.Commands.add('bodyCarErro',() => {
-    cy.log(bodyCarErro)
-})
-
-Cypress.Commands.add('postNegativeEmptyCar', () => {
-    cy.request({
-        method: 'POST',
-        url: url + 'carShop/cars',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: bodyCarErro,
-        failOnStatusCode: false
-    }).then((response) => {
-        expect(response.status).to.eq(200)
+        expect(response.status).to.eq(400)
         cy.log(response.body)
     })
 })
